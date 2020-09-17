@@ -16,3 +16,13 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+});
+Route::get('/datasiswa', 'AdminController@index');
+Route::post('/datasiswa', 'AdminController@tambah');
+Route::get('/datasiswa/{id}/edit','AdminController@edit');
+Route::post('/datasiswa/{id}/edit','AdminController@update');
+Route::get('/datasiswa/{id}/hapus', 'AdminController@hapus');
+
