@@ -13,10 +13,10 @@ class CreateTableJurusan extends Migration
      */
     public function up()
     {
-        Schema::create('t_jurusan', function (Blueprint $table) {
-            $table->id();
-            $table->string('kd_jurusan', 20)->unique();
-            $table->string('nama_jurusan', 100);
+        Schema::create('kelas', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('nama_kelas', 10);
+            $table->string('kompetensi_keahlian', 50);
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateTableJurusan extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('t_jurusan');
+        Schema::dropIfExists('kelas');
     }
 }

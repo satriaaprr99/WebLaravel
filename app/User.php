@@ -10,14 +10,27 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    protected $table = 'users';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'avatar', 'name', 'username', 'email', 'password',
     ];
+
+
+    public function AvatarDefault(){
+
+        if(!$this->avatar){
+            return asset('uploads/default.png');
+        }
+
+        return asset('uploads/'.$this->avatar);
+
+    }
 
     /**
      * The attributes that should be hidden for arrays.
@@ -36,4 +49,29 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function spp()
+    {
+         return $this->hasOne(Spp::class);
+    }
+   
+  /**
+   * Has One User -> Kelas
+   *
+   * @return void
+   */
+    public function kelas()
+    {
+         return $this->hasOne(Kelas::class);
+    }
+   
+ /**
+   * Belongs To Pembayaran -> User (petugas)
+   *
+   * @return void
+   */
+    public function pembayaran()
+    {
+         return $this->hasMany(Pembayaran::class);
+    }
 }

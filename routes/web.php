@@ -14,15 +14,29 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('layout_master.master');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-});
-Route::get('/datasiswa', 'AdminController@index');
-Route::post('/datasiswa', 'AdminController@tambah');
-Route::get('/datasiswa/{id}/edit','AdminController@edit');
-Route::post('/datasiswa/{id}/edit','AdminController@update');
-Route::get('/datasiswa/{id}/hapus', 'AdminController@hapus');
+Route::get('/dashboard', 'DashboardController@index');
 
+Route::get('/login', 'AuthController@login')->name('login');
+Route::post('/login', 'AuthController@postLogin')->name('postlogin');
+
+Route::get('/register', 'AuthController@register')->name('register');
+Route::post('/register', 'AuthController@postRegister')->name('postregister');
+
+Route::get('/logout', 'AuthController@logout');
+
+Route::get('/siswa', 'AdminController@index');
+Route::post('/siswa', 'AdminController@tambah');
+Route::get('/profile{id}','AdminController@edit');
+Route::post('/profile{id}','AdminController@update');
+Route::get('/hapus{id}', 'AdminController@hapus');
+
+Route::get('/kelas', 'KelasController@index');
+Route::post('/kelas', 'KelasController@tambah');
+
+Route::get('/spp', 'SppController@index');
+Route::post('/spp', 'SppController@tambah');
+
+Route::get('/home', 'HomeController@index')->name('home');
