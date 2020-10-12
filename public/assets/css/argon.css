@@ -2723,7 +2723,7 @@ pre code
 }
 .form-control:focus
 {
-    color: #8898aa;
+    color: #000000;
     border-color: #5e72e4;
     outline: 0;
     background-color: #fff;
@@ -2743,7 +2743,7 @@ pre code
 .form-control[readonly]
 {
     opacity: 1; 
-    background-color: #e9ecef;
+    background-color: #fff;
 }
 
 select.form-control:focus::-ms-value
@@ -5315,7 +5315,8 @@ input[type='button'].btn-block
             appearance: none;
 }
 .custom-select:focus
-{
+{   
+    color: #000000;
     border-color: #5e72e4;
     outline: 0;
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, .075), 0 0 0 0 #5e72e4;

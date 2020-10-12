@@ -20,8 +20,8 @@ class CreateTableSiswa extends Migration
             $table->string('nama', 100);
             $table->bigInteger('id_kelas')->unsigned();
             $table->foreign('id_kelas')->references('id')->on('kelas');
-            $table->bigInteger('id_spp')->unsigned();
-            $table->foreign('id_spp')->references('id')->on('spp');
+            $table->bigInteger('id_angkatan')->unsigned();
+            $table->foreign('id_angkatan')->references('id')->on('angkatan');
             $table->string('nohp', 15);
             $table->text('alamat')->nullable();
             $table->timestamps();

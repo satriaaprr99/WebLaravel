@@ -5,19 +5,25 @@
 	<div class="container-fluid">
 		<div class="header-body">
 			<div class="row align-items-center py-4">
-				<div class="col-lg-6 col-7">
-					<h6 class="h2 text-white d-inline-block mb-0">Tables</h6>
+				<div class="col-lg-8 col-7">
+					<h6 class="h2 text-white d-inline-block mb-0">Data Siswa</h6>
 					<nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
 						<ol class="breadcrumb breadcrumb-links breadcrumb-dark">
 							<li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
-							<li class="breadcrumb-item"><a href="#">Tables</a></li>
-							<li class="breadcrumb-item active" aria-current="page">Tables</li>
+							<li class="breadcrumb-item"><a href="dashboard">Dashboard</a></li>
+							<li class="breadcrumb-item active" aria-current="page">Data Siswa</li>
 						</ol>
 					</nav>
 				</div>
-				<div class="col-lg-6 col-5 text-right">
-					<a href="#" class="btn btn-sm btn-neutral">New</a>
-					<a href="#" class="btn btn-sm btn-neutral">Filters</a>
+				<div class="col-lg-4 col-5 text-right">
+					<ul class="nav nav-pills mb-3 float-right" id="pills-tab" role="tablist">
+						<li class="nav-item" role="presentation">
+							<a class="btn-sm nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-1" role="tab" aria-controls="pills-home" aria-selected="true">Daftar Siswa</a>
+						</li>
+						<li class="nav-item" role="presentation">
+							<a class="nav-link btn-sm" id="pills-profile-tab" data-toggle="pill" href="#pills-2" role="tab" aria-controls="pills-profile" aria-selected="false">Tambah Data</a>
+						</li>
+					</ul>
 				</div>
 			</div>
 		</div>
@@ -30,31 +36,24 @@
 			<div class="card">
 				<!-- Card header -->
 				<div class="card-header border-0">
-					<div class="row">
-						<div class="col-sm-6 text-left">
-							<h3 class="mb-0">Table Data Siswa</h3>
-						</div>
-						<div class="col-sm-6">
-							<ul class="nav nav-pills mb-3 float-right" id="pills-tab" role="tablist">
-								<li class="nav-item" role="presentation">
-									<a class="btn-sm nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-1" role="tab" aria-controls="pills-home" aria-selected="true">Daftar Siswa</a>
-								</li>
-								<li class="nav-item" role="presentation">
-									<a class="nav-link btn-sm" id="pills-profile-tab" data-toggle="pill" href="#pills-2" role="tab" aria-controls="pills-profile" aria-selected="false">Tambah Data</a>
-								</li>
-								<li class="nav-item" role="presentation">
-									<a class="nav-link btn-sm" id="pills-contact-tab" data-toggle="pill" href="#pills-3" role="tab" aria-controls="pills-contact" aria-selected="false">Cari Data</a>
-								</li>
-							</ul>
-						</div>
-					</div>
 					<!-- Light table -->
 
 					<div class="tab-content" id="pills-tabContent">
 
 						<div class="tab-pane fade show active" id="pills-1" role="tabpanel" aria-labelledby="pills-home-tab">
+							<div class="row">
+								<div class="col-sm-6 text-left">
+									<h2 class="mb-0">Table Data Siswa</h2>
+								</div>
+								<div class="col-sm-6 text-right">
+									<a href="/siswa/exportexcel" class="btn btn-sm btn-default">
+									<i class="ni ni-single-copy-04"></i> Export
+									</a>
+								</div>
+							</div>
+							<hr>
 							<div class="table-responsive">
-								<table class="table align-items-center table-flush">
+								<table class="table align-items-center table-flush" id="datatable-basic">
 									<thead class="thead-light">
 										<tr>
 											<th>No</th>
@@ -62,7 +61,7 @@
 											<th>NIS</th>
 											<th>Nama Lengkap</th>
 											<th>Kelas</th>
-											<th>Tahun Ajaran</th>
+											<th>Angkatan</th>
 											<th></th>
 										</tr>
 									</thead>
@@ -74,14 +73,14 @@
 											<td>
 												<a href="/profile{{ $siswa->id }}">
 													<span class="avatar avatar-sm rounded-circle">
-													<img alt="Image placeholder" style="width: 40px; height: 40px;" src="{{ $siswa->AvatarDefault() }}">
-												</span>		
+														<img alt="Image placeholder" style="width: 40px; height: 40px;" src="{{ $siswa->AvatarDefault() }}">
+													</span>		
 												</a>										
 											</td>
 											<td>{{ $siswa->nis }}</td>
 											<td>{{ $siswa->nama }}</td>
 											<td>{{ $siswa->kelas->nama_kelas }}</td>
-											<td>{{ $siswa->spp->tahun }}</td>
+											<td>{{ $siswa->angkatan->tahun }}</td>
 											<td class="text-right">
 												<div class="dropdown">
 													<a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -89,7 +88,7 @@
 													</a>
 													<div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
 														<a class="dropdown-item" href="/profile{{ $siswa->id }}">Edit</a>
-														<a class="dropdown-item" href="/hapus{{ $siswa->id }}">Delete</a>
+														<a class="dropdown-item deleteSiswa" href="#" siswa-id="{{$siswa->id}}" siswa-nama="{{$siswa->nama}}" >Delete</a>
 													</div>
 												</div>
 											</td>
@@ -98,129 +97,90 @@
 									</tbody>
 								</table>
 							</div>
-							<!-- Card footer -->
-							<div class="card-footer py-4">
-								<nav aria-label="...">
-									<ul class="pagination justify-content-end mb-0">
-										<li class="page-item disabled">
-											<a class="page-link" href="#" tabindex="-1">
-												<i class="fas fa-angle-left"></i>
-												<span class="sr-only">Previous</span>
-											</a>
-										</li>
-										<li class="page-item active">
-											<a class="page-link" href="#">1</a>
-										</li>
-										<li class="page-item">
-											<a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
-										</li>
-										<li class="page-item"><a class="page-link" href="#">3</a></li>
-										<li class="page-item">
-											<a class="page-link" href="#">
-												<i class="fas fa-angle-right"></i>
-												<span class="sr-only">Next</span>
-											</a>
-										</li>
-									</ul>
-								</nav>
-							</div>
 						</div>
 
 						<div class="tab-pane fade" id="pills-2" role="tabpanel" aria-labelledby="pills-profile-tab">
-							<form action="/siswa" method="POST" autocomplete="off">
+							<form action="/siswa" method="POST" enctype="multipart/form-data" autocomplete="off">
 								@csrf
 
 								<div class="form-group row">
 									<label for="inputfoto" class="col-sm-2 form-control-label pt-0">Foto Profile</label>
 									<div class="col-sm-10">
-										<input type="file" name="avatar" class="form-control form-control-sm" id="inputfoto">
+										<input type="file" name="avatar" class="form-control form-control-sm @error('avatar') is-invalid @enderror" id="inputfoto" value="{{old('avatar')}}">
+										<span class="text-danger text-sm">@error('avatar') {{ $message }} @enderror</span>
 									</div>
 								</div>
 
 								<div class="form-group row">
 									<label for="inputnis" class="col-sm-2 form-control-label pt-0">NIS</label>
 									<div class="col-sm-10">
-										<input name="nis" type="text" class="form-control form-control-sm" id="inputnis" required="">
+										<input name="nis" type="text" class="form-control form-control-sm @error('nis') is-invalid @enderror" id="inputnis" value="{{old('nis')}}">
+										<span class="text-danger text-sm">@error('nis') {{ $message }} @enderror</span>
 									</div>
 								</div>
 
 								<div class="form-group row">
 									<label for="inputnama" class="col-sm-2 form-control-label pt-0">Nama</label>
 									<div class="col-sm-10">
-										<input name="nama" type="text" class="form-control form-control-sm" id="inputnama" required="">
+										<input name="nama" type="text" class="form-control form-control-sm @error('nama') is-invalid @enderror" id="inputnama" value="{{old('nama')}}">
+										<span class="text-danger text-sm">@error('nama') {{ $message }} @enderror</span>
 									</div>
 								</div>
 
 								<div class="form-group row">
 									<label for="inputkelas" class="col-sm-2 form-control-label pt-0">Kelas</label>
 									<div class="col-sm-10">
-										<select name="kelas" id="inputkelas" class="form-control form-control-sm" {{ count($kelas) == 0 ? 'disabled' : '' }} required="">
+										<select name="kelas" id="inputkelas" class="form-control form-control-sm @error('kelas') is-invalid @enderror" {{ count($kelas) == 0 ? 'disabled' : '' }}>
 											@if(count($kelas) == 0)											
 											<option>Pilihan tidak ada</option>
 											@else											
 											<option value="">Silahkan Pilih</option>											
 											@foreach($kelas as $value) 			
-											<option value="{{ $value->id }}">{{ $value->nama_kelas }}</option>
+											<option value="{{ $value->id }}" {{ $siswa->id_kelas == $value->id ? 'selected' : '' }}>{{ $value->nama_kelas }}</option>
 											@endforeach
 											@endif	
 										</select>
+										<span class="text-danger text-sm">@error('kelas') {{ $message }} @enderror</span>
+									</div>
+								</div>
+
+								<div class="form-group row">
+									<label for="inputkelas" class="col-sm-2 form-control-label pt-0">Angkatan</label>
+									<div class="col-sm-10">
+										<select name="angkatan" id="inputkelas" class="form-control form-control-sm @error('angkatan') is-invalid @enderror" {{ count($angkatan) == 0 ? 'disabled' : '' }}>
+											@if(count($angkatan) == 0)											
+											<option>Pilihan tidak ada</option>
+											@else											
+											<option value="">Silahkan Pilih</option>											
+											@foreach($angkatan as $value) 			
+											<option value="{{ $value->id }}" {{ $siswa->id_angkatan == $value->id ? 'selected' : '' }}>{{ $value->tahun }}</option>
+											@endforeach
+											@endif	
+										</select>
+										<span class="text-danger text-sm">@error('angkatan') {{ $message }} @enderror</span>
 									</div>
 								</div>
 
 								<div class="form-group row">
 									<label for="inputnohp" class="col-sm-2 form-control-label pt-0">Nomor Handphone</label>
 									<div class="col-sm-10">
-										<input name="nohp" type="text" class="form-control form-control-sm" id="inputnohp" required="">
+										<input name="nohp" type="text" class="form-control form-control-sm @error('nohp') is-invalid @enderror" id="inputnohp" value="{{old('nohp')}}">
+										<span class="text-danger text-sm">@error('nohp') {{ $message }} @enderror</span>
 									</div>
 								</div>
 
 								<div class="form-group row">
 									<label for="inputalamat" class="col-sm-2 form-control-label pt-0">Alamat Rumah</label>
 									<div class="col-sm-10">
-										<textarea name="alamat" class="form-control form-control-sm" id="inputalamat" required=""></textarea>
-									</div>
-								</div>
-
-								<div class="form-group row">
-									<label for="inputspp" class="col-sm-2 form-control-label pt-0">SPP</label>
-									<div class="col-sm-10">
-										<select name="spp" id="inputspp" class="form-control form-control-sm" {{ count($spp) == 0 ? 'disabled' : '' }} required="">
-											@if(count($spp) == 0)											
-											<option>Pilihan tidak ada</option>
-											@else											
-											<option value="">Silahkan Pilih</option>											
-											@foreach($spp as $value) 			
-											<option value="{{ $value->id }}">{{ 'Tahun '.$value->tahun.' - '.'Rp.' .number_format($value->nominal) }}</option>
-											@endforeach
-											@endif	
-										</select>
+										<textarea name="alamat" class="form-control form-control-sm @error('alamat') is-invalid @enderror" id="inputalamat">{{old('alamat')}}</textarea>
+										<span class="text-danger text-sm">@error('alamat') {{ $message }} @enderror</span>
 									</div>
 								</div>
 
 								<div class="modal-footer">
-									<button type="submit" class="btn btn-primary"><i class="fa fa-plus-square"></i> Tambah Data</button>
+									<button type="submit" class="btn btn-success"><i class="fa fa-plus-square"></i> Tambah Data</button>
 								</form>
 							</div>
-						</div>
-
-						<div class="tab-pane fade" id="pills-3" role="tabpanel" aria-labelledby="pills-contact-tab">
-
-							<form method="GET" action="/datasiswa" autocomplete="off">
-								<div class="form-group row">
-									<label for="inputnis" class="col-sm-2 col-form-label pt-0">NIS</label>
-									<div class="col-sm-10">
-										<input name="nis" type="text" class="form-control" id="inputnis">
-									</div>
-								</div>
-
-								<div class="form-group row">
-									<label for="inputnama" class="col-sm-2 col-form-label pt-0">Nama</label>
-									<div class="col-sm-10">
-										<input name="nama" type="text" class="form-control" id="inputnama">
-									</div>
-								</div>
-								<button class="btn btn-primary" type="submit">Search</button>
-							</form>
 						</div>
 					</div>
 				</div>
@@ -228,8 +188,29 @@
 		</div>
 	</div>
 </div>
-</div>
-</div>		
-</div>
-</div>
+@endsection
+@section('footer')
+<script>
+	$(document).ready(function(){
+		$('#datatable-basic').DataTable();
+	});	
+
+	$('.deleteSiswa').click(function(){
+		var siswa_id = $(this).attr('siswa-id');
+		var siswa_nama = $(this).attr('siswa-nama');
+		Swal.fire({
+			title: 'Apakah Kamu Yakin?',
+			text: "Ingin Menghapus data Siswa "+siswa_nama+" ini ??",
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes, delete it!'
+		}).then((result) => {
+			if (result.isConfirmed) {
+				window.location = "/hapus"+siswa_id+""
+			}
+		})
+	});
+</script>
 @endsection

@@ -6,29 +6,29 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pembayaran extends Model
 {
-    protected $table = 'pembayaran';
+    protected $table = 'siswa_tagihan';
    
     protected $fillable = [
-         'id_user','id_siswa', 'spp_bulan', 'jumlah_bayar'
+         'kd_bayar', 'tagihan_id', 'siswa_id', 'bayar'
     ];
+    // protected $table = 'pembayaran';
    
- /**
-   * Belongs To Pembayaran -> User (petugas)
-   *
-   * @return void
-   */
-    public function users()
+    // protected $fillable = [
+    //      'kd_pembayaran', 'id_user', 'id_tagihan', 'id_siswa', 'jumlah_bayar', 'keterangan'
+    // ];
+
+    // public function users()
+    // {
+    //      return $this->belongsTo(User::class,'id_user', 'id');
+    // }
+
+    public function tagihan()
     {
-         return $this->belongsTo(User::class,'id_petugas', 'id');
+         return $this->belongsTo(Tagihan::class,'tagihan_id', 'id', 'jenis_tagihan');
     }
    
- /**
-   * Has Many Pembayaran -> Siswa
-   *
-   * @return void
-   */
     public function siswa()
     {
-         return $this->belongsTo(Siswa::class,'id_siswa','id','nisn');
+         return $this->belongsTo(Siswa::class,'siswa_id','id','nis');
     }
 }

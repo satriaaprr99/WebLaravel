@@ -32,46 +32,27 @@ class User extends Authenticatable
 
     }
 
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
     protected $hidden = [
         'password', 'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
 
-    public function spp()
+    public function tagihan()
     {
-         return $this->hasOne(Spp::class);
+         return $this->hasOne(Tagihan::class);
     }
    
-  /**
-   * Has One User -> Kelas
-   *
-   * @return void
-   */
     public function kelas()
     {
          return $this->hasOne(Kelas::class);
     }
-   
- /**
-   * Belongs To Pembayaran -> User (petugas)
-   *
-   * @return void
-   */
-    public function pembayaran()
+
+     public function angkatan()
     {
-         return $this->hasMany(Pembayaran::class);
+         return $this->hasOne(Angkatan::class);
     }
+
 }

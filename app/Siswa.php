@@ -8,34 +8,38 @@ class Siswa extends Model
 {
   protected $table = 'siswa';
   protected $fillable = [
-   'avatar', 'nis', 'username', 'nama', 'id_kelas', 'nohp', 'alamat', 'id_spp'
+   'avatar', 'nis', 'username', 'nama', 'id_kelas', 'id_angkatan', 'nohp', 'alamat'
  ];
- 
-   /**
-   * Belongs To Siswa -> Spp
-   *
-   * @return void
-   */
-   public function spp()
-   {
-     return $this->belongsTo(Spp::class,'id_spp','id');
-   }
    
-   public function pembayaran(){
-    return  $this->hasMany(Pembayaran::class,'id_spp');
+   public function tagihan(){
+    return  $this->belongsToMany(Tagihan::class)->withPivot(['id', 'kd_bayar', 'bayar', 'created_at'])->withTimeStamps();
   }
+
   
   public function kelas(){
     return  $this->belongsTo(Kelas::class,'id_kelas');
   }
 
-  public function AvatarDefault(){
-
-   if(!$this->avatar){
-    return asset('uploads/default.png');
+  public function angkatan(){
+    return  $this->belongsTo(Angkatan::class,'id_angkatan');
   }
 
-  return asset('uploads/'.$this->avatar);
+  public function AvatarDefault(){
 
-}
+     if(!$this->avatar){
+      return asset('uploads/default.png');
+    }
+
+    return asset('uploads/'.$this->avatar);
+
+  }
+
+  public function nama_kelas(){
+    return $this->kelas->nama_kelas;
+  }
+
+  public function tahun_angkatan(){
+    return $this->angkatan->tahun;
+  }
+
 }
