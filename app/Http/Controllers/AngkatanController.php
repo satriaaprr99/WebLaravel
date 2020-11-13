@@ -3,64 +3,118 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\Response;
 use App\User;
 use App\Siswa;
 use App\Kelas;
 use App\Angkatan;
 use App\Tagihan;
 use App\Pembayaran;
-use Alert;
+use DataTables;
 
 class AngkatanController extends Controller
 {
 
 	public function __construct()
-  {
-    $this->middleware('auth');
-  }
+	{
+		$this->middleware('auth');
+	}
 
-  public function index(){
+	public function index(){
 
-   $data = [
-     'angkatan' => Angkatan::orderBy('tahun', 'ASC')->paginate(10),
-     'user' => User::find(auth()->user()->id),
-   ];
+		$data = Http::get('http://localhost:8000/angkatan')->json();
 
-   return view('angkatan.angkatan', $data);
- }
+        return view('pages.data.angkatan.angkatan', compact('data'));
+	}
 
- public function tambah(Request $request){
+	public function show($id){
 
-   $angkatan = Angkatan::create($request->all());
+		$model = Http::get('http://localhost:8000/angkatan/'.$id.'')->json();
+		$jml = Siswa::where('id_angkatan', $id)->count();
+        return view('pages.data.angkatan.show', compact('model', 'jml')); 
 
-   return back()->with('sukses', 'Data Berhasil Ditambahkan');
- }
+	}
 
-  public function hapus($id){
+	public function create(){
 
-    Angkatan::find($id)->delete();
+		$model = Http::get('http://localhost:8000/angkatan')->json();
+        return view('pages.data.angkatan.form', compact('model')); 
 
-    return back()->with('sukses', 'Data Berhasil Dihapus');
+	}
 
-  }
+	public function store(Request $request){
 
-  public function edit($id){
+		try {
+            $this->validate($request, [
+	            'nama_angkatan' => 'required|max:255',
+	            'tahun' => 'required',
+       		]);
 
-   $data = [
-    'user' => User::find(auth()->user()->id),
-    'angkatan' => Angkatan::find($id),
-  ];
+	        $model = Http::post('http://localhost:8000/angkatan', [
+	            'nama_angkatan' => $request->nama_angkatan,
+	            'tahun' => $request->tahun
+	        ]);
 
-  return view('angkatan.editangkatan', $data);
+        	return response($model)->header('Content-Type', 'application/json');
 
-  }
+        } catch (Exception $e) {
+            echo $e;
+        }
 
-  public function update(Request $request, $id){
+	}
 
-    $angkatan = \App\angkatan::find($id);
-    $angkatan->update($request->all());
+	public function edit($id){
 
-    return redirect('/angkatan')->with('sukses', 'Data Berhasil Diedit');
-  }
+		$model = Http::get('http://localhost:8000/angkatan/'.$id.'')->json();
+        return view('pages.data.angkatan.formEdit', compact('model')); 
 
+	}
+
+	public function update(Request $request, $id){
+
+		try {
+            $this->validate($request, [
+	            'nama_angkatan' => 'required|max:255',
+	            'tahun' => 'required',
+       		]);
+
+	        $model = Http::put('http://localhost:8000/angkatan/'.$id.'', [
+	            'nama_angkatan' => $request->nama_angkatan,
+	            'tahun' => $request->tahun
+	        ]);
+
+        	return response($model)->header('Content-Type', 'application/json');
+
+        } catch (Exception $e) {
+            echo $e;
+        }
+
+	}
+
+	public function destroy($id){
+
+		 Http::delete('http://localhost:8000/angkatan/'.$id.'')->json();
+
+	}
+
+	public function dataTable(){
+
+        $model =  Http::get('http://localhost:8000/angkatan')->json();
+        return DataTables::of($model)
+        ->addColumn('tgl', function($data){
+            return $data['created_at'];
+        })
+        ->addColumn('aksi', function($model){
+            return view('layouts._aksi', [
+                'model' => $model,
+                'url_show' => route('angkatan.show', $model['id']),
+                'url_edit' => route('angkatan.edit', $model['id']),
+                'url_destroy' => route('angkatan.destroy', $model['id'])
+            ]);
+        })
+        ->addIndexColumn()
+        ->rawColumns(['tgl', 'aksi'])
+        ->make(true);
+    }
 }

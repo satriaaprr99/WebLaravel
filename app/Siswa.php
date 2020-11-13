@@ -8,7 +8,7 @@ class Siswa extends Model
 {
   protected $table = 'siswa';
   protected $fillable = [
-   'avatar', 'nis', 'username', 'nama', 'id_kelas', 'id_angkatan', 'nohp', 'alamat'
+   'id', 'avatar', 'nis', 'username', 'nama', 'id_kelas', 'id_angkatan', 'nohp', 'alamat'
  ];
    
    public function tagihan(){
@@ -27,7 +27,7 @@ class Siswa extends Model
   public function AvatarDefault(){
 
      if(!$this->avatar){
-      return asset('uploads/default.png');
+      return asset('uploads/user.png');
     }
 
     return asset('uploads/'.$this->avatar);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Auth;
 use \App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class AuthController extends Controller
 {
@@ -46,7 +47,7 @@ class AuthController extends Controller
     		'password' => bcrypt($request->password)
     	]);
 
-    	return redirect('/login')->with('sukses', 'Berhasil Daftar');;
+    	return redirect('/login')->with('sukses', 'Berhasil Daftar');
     }
 
 
@@ -54,7 +55,7 @@ class AuthController extends Controller
 
     	Auth::logout();
 
-    	return redirect('/login');
+    	return redirect('/login')->with('sukses', 'Berhasil Logout');
 
     }
 

@@ -3,64 +3,118 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\Response;
 use App\User;
 use App\Siswa;
 use App\Kelas;
 use App\Tagihan;
 use App\Pembayaran;
-use Alert;
+use DataTables;
 
 class KelasController extends Controller
 {
 
-	public function __construct()
-  {
-    $this->middleware('auth');
-  }
+	public function __construct(){
+        $this->middleware('auth');
+    }
 
-  public function index(Request $request){
+    public function index(Request $request){
 
-      $data = [
-       'kelas' => Kelas::all(),
-       'user' => User::find(auth()->user()->id),
-      ];
+        $data = Http::get('http://localhost:8000/kelas')->json();
 
-      return view('kelas.datakelas', $data);
- }
+        return view('pages.data.kelas.datakelas', compact('data'));
+    }
 
-   public function tambah(Request $request){
+    public function show($id){
 
-     $Kelas = Kelas::create($request->all());
+        $model = Http::get('http://localhost:8000/kelas/'.$id.'')->json();
+        $jml = Siswa::where('id_kelas', $id)->count();
+        return view('pages.data.kelas.show', compact('model', 'jml'));
 
-     return back()->with('sukses', 'Data Berhasil Ditambahkan');
-   }
+    }
 
-   public function hapus($id){
+    public function create(){
 
-    Kelas::find($id)->delete();
+        $model = Http::get('http://localhost:8000/kelas')->json();
+        
+        return view('pages.data.kelas.form', compact('model'));
 
-    return back()->with('sukses', 'Data Berhasil Dihapus');
+    }
+    public function store(Request $request){
 
-  }
+        try {
+            $this->validate($request, [
+            'nama_kelas' => 'required|max:255',
+            'kompetensi_keahlian' => 'required',
+            ]);
 
-  public function edit($id){
+        $model = Http::post('http://localhost:8000/kelas', [
+            'nama_kelas' => $request->nama_kelas,
+            'kompetensi_keahlian' => $request->kompetensi_keahlian
+        ]);
 
-   $data = [
-    'user' => User::find(auth()->user()->id),
-    'kelas' => Kelas::find($id),
-  ];
+        return response($model)->header('Content-Type', 'application/json');
 
-  return view('kelas.editkelas', $data);
+        } catch (Exception $e) {
+            echo $e;
+        }
+    
+    }
 
-  }
+    public function edit($id){
 
-  public function update(Request $request, $id){
+        $model = Http::get('http://localhost:8000/kelas/'.$id.'')->json();
+        return view('pages.data.kelas.formEdit',$model, compact('model')); 
+    }
 
-    $Kelas = \App\Kelas::find($id);
-    $Kelas->update($request->all());
+    public function update(Request $request, $id){
 
-    return redirect('/kelas')->with('sukses', 'Data Berhasil Diedit');
+        try {
+            $this->validate($request, [
+            'nama_kelas' => 'required|max:255',
+            'kompetensi_keahlian' => 'required',
+            ]);
 
-  }
+        $model = Http::put('http://localhost:8000/kelas/'.$id.'', [
+            'nama_kelas' => $request->nama_kelas,
+            'kompetensi_keahlian' => $request->kompetensi_keahlian
+        ]);
+
+        return response($model)->header('Content-Type', 'application/json');
+
+        } catch (Exception $e) {
+            echo $e;
+        }
+
+    }
+    public function destroy($id){
+
+        // Kelas::find($id)->delete();
+        $data = Http::delete('http://localhost:8000/kelas/'.$id.'')->json();
+
+        return response($data);
+    }
+
+    public function dataTable(){
+
+        $model = Http::get('http://localhost:8000/kelas')->json();
+        return DataTables::of($model)
+        ->addColumn('tgl', function($data){
+            return $data['created_at'];
+        })
+        ->addColumn('aksi', function($model){
+            return view('layouts._aksi', [
+                'model' => $model,
+                'url_show' => route('kelas.show', $model['id']),
+                'url_edit' => route('kelas.edit', $model['id']),
+                'url_destroy' => route('kelas.destroy', $model['id'])
+            ]);
+        })
+        ->addIndexColumn()
+        ->rawColumns(['tgl', 'aksi'])
+        ->make(true);
+    }
+
 
 }

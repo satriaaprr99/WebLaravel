@@ -32,8 +32,20 @@ class LaporanController extends Controller
 			'bayar' => Pembayaran::all()->sum('bayar'),
 		];
 
-		$pdf = PDF::loadView('transaksi.pdf', $data);
-		return $pdf->download('DataTransaksiPembayaranSPP_SMKN4BDG.pdf');
+		$pdf = PDF::loadView('pages.pembayaran.transaksi.pdf', $data);
+		return $pdf->download('DataTransaksi_SMKN4BDG.pdf');
 
+	}
+
+	public function exportSiswaPdf($id){
+
+		PDF::setPaper('A6', 'landskape');
+
+		$model = Pembayaran::find($id);
+      
+
+		$pdf = PDF::loadView('pages.pembayaran.transaksi.pdfSiswa', compact('model'));
+		return $pdf->download('StrukPembayaran.pdf');
+		// return view('pages.pembayaran.transaksi.pdfSiswa', compact('model'));
 	}
 }

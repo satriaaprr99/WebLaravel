@@ -9,18 +9,8 @@ class Pembayaran extends Model
     protected $table = 'siswa_tagihan';
    
     protected $fillable = [
-         'kd_bayar', 'tagihan_id', 'siswa_id', 'bayar'
+         'kd_bayar', 'tagihan_id', 'siswa_id', 'bayar', 'nis'
     ];
-    // protected $table = 'pembayaran';
-   
-    // protected $fillable = [
-    //      'kd_pembayaran', 'id_user', 'id_tagihan', 'id_siswa', 'jumlah_bayar', 'keterangan'
-    // ];
-
-    // public function users()
-    // {
-    //      return $this->belongsTo(User::class,'id_user', 'id');
-    // }
 
     public function tagihan()
     {
@@ -31,4 +21,5 @@ class Pembayaran extends Model
     {
          return $this->belongsTo(Siswa::class,'siswa_id','id','nis');
     }
+
 }

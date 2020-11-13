@@ -22,4 +22,12 @@ class Tagihan extends Model
 		return  $this->belongsToMany(Siswa::class)->withPivot(['kd_bayar', 'bayar', 'created_at']);
 	}
 
+	public function tgl(){
+    	return $this->created_at;
+    }
+
+    public function nominalFormat(){
+    	return number_format($this->nominal);
+    }
+
 }

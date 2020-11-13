@@ -3,117 +3,177 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use App\User;
 use App\Siswa;
 use App\Kelas;
+use App\Angkatan;
 use App\Tagihan;
 use App\Pembayaran;
-use Alert;
+use DataTables;
 use PDF;
 
 class TransaksiController extends Controller
 {
-	public function __construct()
-	{
+	public function __construct(){
 		$this->middleware('auth');
 	}
 
 	public function index(Request $request){
 
-		$data = [
-			'pembayaran' => Pembayaran::all(),
-			'siswa' => Siswa::all(),
-			'tagihan' => Tagihan::all(),
-			'user' => User::find(auth()->user()->id),
+		$data = Http::get('http://localhost:8000/transaksi')->json();
 
-		];
-
-		return view('transaksi.transaksi', $data);
+		return view('pages.pembayaran.transaksi.transaksi', $data);
 
 	}
 
 	public function histori(){
 
-		$data = [
-			'pembayaran' => Pembayaran::orderBy('created_at', 'DESC')->paginate(100),
-			'siswa' => Siswa::all(),
-			'tagihan' => Tagihan::all(),
-			'user' => User::find(auth()->user()->id),
-		];
+		$model = Http::get('http://localhost:8000/histori')->json();
 
-		return view('transaksi.histori', $data);
+		return view('pages.pembayaran.transaksi.histori', compact('model'));
 	}
 
-	public function tambah(Request $request){
+	public function show($id){
 
-		if(Siswa::where('nis',$request->nis)->exists() == false):
-			return back()->with('error', 'NIS Tidak ada di Data Siswa!');
-		exit;
-		endif;
+		$model = Http::get('http://localhost:8000/transaksi/'.$id.'')->json();
+		
+        return view('pages.pembayaran.transaksi.show', compact('model'));
+	}
 
-		$siswa = Siswa::where('nis',$request->nis)->get();
+	public function dataTable(){
 
-		foreach($siswa as $val){
-			$id_siswa = $val->id;
+		$model = Http::get('http://localhost:8000/transaksi')->json();
+		return DataTables::of($model)
+		->addColumn('lunas', function($data){
+			if ($data['nominal'] - $data['bayar'] == 0) {
+            	return '<b class="text-green">Lunas</b>';
+	        } else {
+	            return '<b class="text-red">Belum Lunas</b>';
+	        };
+		})
+		->addColumn('nominalFormat', function($data){
+			return 'Rp. '.number_format($data['nominal']).'';
+		})
+		->addColumn('bayarFormat', function($data){
+			return 'Rp. '.number_format($data['bayar']).'';
+		})
+		->addColumn('aksi', function($model){
+			return view('layouts._aksi', [
+				'model' => $model,
+				'url_show' => route('transaksi.show', $model['id']),
+				'url_edit' => route('transaksi.edit', $model['id']),
+				'url_destroy' => route('transaksi.destroy', $model['id'])
+			]);
+		})
+		->addColumn('cetak', function($data){
+			return '<a href="export/pdf/siswa/'.$data['id'] .'" class="btn btn-sm btn-default">
+					<i class="ni ni-single-copy-04"></i></a>';
+		})
+		->addIndexColumn()
+		->rawColumns(['nominalFormat','bayarFormat','lunas','tgl','aksi', 'cetak'])
+		->make(true);
+	}
+
+	public function create(){
+
+		$model = Http::get('http://localhost:8000/transaksi')->json();
+		$model2 = Http::get('http://localhost:8000/tagihan')->json();
+
+		return view('pages.pembayaran.transaksi.form', compact('model', 'model2')); 
+	}
+
+	public function store(Request $request){
+
+		try {
+			
+			$this->validate($request, [
+	            'siswa_id' => 'required',
+	            'tagihan_id' => 'required',
+	            'tgl_bayar' => 'required',
+	            'bayar' => 'required|integer'
+	        ]);
+
+			 $model = Http::post('http://localhost:8000/transaksi', [
+	            'kd_bayar' => mt_rand(00000000, 99999999),
+				'siswa_id' => $request->siswa_id,
+				'tagihan_id' => $request->tagihan_id,
+				'tgl_bayar' => $request->tgl_bayar,
+				'bayar' => $request->bayar,
+	        ]);
+
+	        return response($model)->header('Content-Type', 'application/json');
+
+		} catch (Exception $e) {
+			echo $e;
 		}
-
-		$siswa = Pembayaran::create([
-			'kd_bayar' => mt_rand(00000000, 99999999),
-			'siswa_id' => $id_siswa,
-			'tagihan_id' => $request->tagihan,
-			'bayar' => $request->bayar,
-		]);
-
-		return back()->with('sukses', 'Data Berhasil Ditambahkan');
-	}
-
-	public function hapus($id){
-
-		Pembayaran::find($id)->delete();
-
-		return back()->with('sukses', 'Data Berhasil Dihapus');
-
+		
 	}
 
 	public function edit($id){	
 
-		$data = [
-			'user' => User::find(auth()->user()->id),
-			'siswa' => Siswa::all(),
-			'tagihan' => Tagihan::all(),
-			'pembayaran' => Pembayaran::find($id),
-		];
+		$model = Http::get('http://localhost:8000/transaksi/'.$id.'')->json();
+		$model2 = Http::get('http://localhost:8000/tagihan')->json();
 
-		return view('transaksi.edittransaksi', $data);
+		return view('pages.pembayaran.transaksi.formEdit', compact('model', 'model2')); 
 
 	}
 
 	public function update(Request $request, $id){
 
-		$pembayaran = Pembayaran::find($id);
+		try {
+			
+			$this->validate($request, [
+	            'siswa_id' => 'required',
+	            'tagihan_id' => 'required',
+	            'bayar' => 'required|integer'
+	        ]);
 
-		$pembayaran->update([
-			'tagihan_id' => $request->tagihan,
-			'bayar' => $request->bayar,
-		]);
+			$model = Http::put('http://localhost:8000/transaksi/'.$id.'', [
+					'siswa_id' => $request->siswa_id,
+					'tagihan_id' => $request->tagihan_id,
+					'bayar' => $request->bayar,
+	       	]);
 
-		if(Siswa::where('nis',$request->nis)->exists() == false):
-			return back()->with('error', 'NIS siswa tidak ada di data');
-		exit;
-		endif;
+	        return response($model)->header('Content-Type', 'application/json');
 
-		if($request->nis != $pembayaran->siswa->nis) :
-			$siswa = Siswa::where('nis',$request->nis)->get();
-
-			foreach($siswa as $val){
-				$id_siswa = $val->id;
-			}
-
-			$pembayaran->update([
-				'siswa_id' => $id_siswa,
-			]);
-		endif;
-
-		return back()->with('sukses', 'Data Berhasil Diedit');
+		} catch (Exception $e) {
+			echo $e;
+		}
+		
 	}
+
+	public function destroy($id){
+
+		$model = Http::delete('http://localhost:8000/transaksi/'.$id.'')->json();
+
+	}
+
+	public function transaksi($id){
+
+        $model = Siswa::findOrFail($id);
+        $data = [
+            'user' => User::find(auth()->user()->id),
+            'siswa' => Siswa::find($id),
+            'kelas' => Kelas::all(),
+            'angkatan' => Angkatan::all(),
+            'tagihan' => Tagihan::all(),
+            'bayar' => Pembayaran::find($id)
+        ];
+        
+        return view('pages.data.siswa.formTransaksi', $data, compact('model'));
+    }
+
+    public function createTransaksi(Request $request, $id){
+        $data = Siswa::find($id);
+        if($data->tagihan()->where('tagihan_id', $request->tagihan)->exists()){
+            return back()->with('error', 'Data Tagihan sudah ada di tabel siswa');
+        }else{
+        	$data->tagihan()->attach($request->tagihan, [
+	            'kd_bayar' => mt_rand(00000000, 99999999), 
+	            'bayar' => $request->bayar
+       		]);
+        }
+    } 
 }
+

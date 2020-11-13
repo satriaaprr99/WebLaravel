@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use App\User;
 use App\Siswa;
 use App\Kelas;
@@ -25,10 +26,12 @@ class DashboardController extends Controller
 			'kelas' => Kelas::all(),
 			'tagihan' => Tagihan::all()->sum('nominal'),
 			'ctagihan' => Tagihan::all(),
+			'cbayar' => Pembayaran::all(),
 			'bayar' => Pembayaran::all()->sum('bayar'),
 			'pembayaran' => Pembayaran::orderBy('updated_at', 'DESC')->paginate(5),
 		];
 
-		return view('dashboard', $data);
+		$model = Http::get('http://localhost:8000/histori')->json();
+		return view('pages.dashboard.dashboard', $data, compact('model'));
 	}
 }

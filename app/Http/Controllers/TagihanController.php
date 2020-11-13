@@ -1,12 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Http;
 use App\User;
 use App\Siswa;
 use App\Kelas;
 use App\Tagihan;
 use App\Pembayaran;
-use Alert;
+use DataTables;
 
 use Illuminate\Http\Request;
 
@@ -20,47 +21,106 @@ class TagihanController extends Controller
 
 	public function index(){
 
-		$data = [
-			'tagihan' => Tagihan::all(),
-			'user' => User::find(auth()->user()->id),
-		];
+		$data = Http::get('http://localhost:8000/tagihan')->json();
 
-		return view('tagihan.datatagihan', $data);
+		return view('pages.pembayaran.tagihan.datatagihan', $data);
 	}
 
-	public function tambah(Request $request){
+	public function dataTable(){
 
-		$Tagihan = Tagihan::create($request->all());
+		$model = Http::get('http://localhost:8000/tagihan')->json();
+		return DataTables::of($model)
+		->addColumn('nominalFormat', function($data){
+			return 'Rp. '.number_format($data['nominal']).'';
+		})
+		->addColumn('aksi', function($model){
+			return view('layouts._aksi', [
+				'model' => $model,
+				'url_show' => route('tagihan.show', $model['id']),
+				'url_edit' => route('tagihan.edit', $model['id']),
+				'url_destroy' => route('tagihan.destroy', $model['id'])
+			]);
+		})
+		->addIndexColumn()
+		->rawColumns(['nominalFormat', 'aksi'])
+		->make(true);
+	}
 
-		return back()->with('sukses', 'Data Berhasil Ditambah');
+	public function show($id){
+
+		$model = Http::get('http://localhost:8000/tagihan/'.$id.'')->json();
+		return view('pages.pembayaran.tagihan.show', compact('model')); 
+
+	}
+
+	public function create(){
+
+		$model = Http::get('http://localhost:8000/tagihan')->json();
+
+		return view('pages.pembayaran.tagihan.form', compact('model'));
+	}
+
+	public function store(Request $request){
+
+		try {
+            $this->validate($request, [
+				'kd_tagihan' => 'required|unique:tagihan',
+				'jenis_tagihan' => 'required',
+				'tahun' => 'required',
+				'nominal' => 'required|integer'
+			]);
+
+	        $model = Http::post('http://localhost:8000/tagihan', [
+	            'kd_tagihan' => $request->kd_tagihan,
+	            'jenis_tagihan' => $request->jenis_tagihan,
+	            'bulan' => $request->bulan,
+	            'tahun' => $request->tahun,
+	            'nominal' => $request->nominal
+	        ]);
+
+        return response($model)->header('Content-Type', 'application/json');
+
+        } catch (Exception $e) {
+            echo $e;
+        }
 	}
 
 	public function edit($id){
 
-		$data = [
-			'user' => User::find(auth()->user()->id),
-			'tagihan' => Tagihan::find($id),
-		];
-
-		return view('tagihan.edittagihan', $data);
+		$model = Http::get('http://localhost:8000/tagihan/'.$id.'')->json();
+		return view('pages.pembayaran.tagihan.formEdit', compact('model')); 
 
 	}
 
 	public function update(Request $request, $id){
 
-		$Tagihan = \App\Tagihan::find($id);
-		$Tagihan->update($request->all());
+		try {
+            $this->validate($request, [
+				'kd_tagihan' => 'required',
+				'jenis_tagihan' => 'required',
+				'tahun' => 'required',
+				'nominal' => 'required|integer'
+			]);
 
-		return redirect('/tagihan')->with('sukses', 'Data Berhasil Diedit');
-          // return redirect('/siswa')->with('sukses', 'Data Berhasil Diedit');
+	        $model = Http::put('http://localhost:8000/tagihan/'.$id.'', [
+	            'kd_tagihan' => $request->kd_tagihan,
+	            'jenis_tagihan' => $request->jenis_tagihan,
+	            'bulan' => $request->bulan,
+	            'tahun' => $request->tahun,
+	            'nominal' => $request->nominal
+	        ]);
+
+        return response($model)->header('Content-Type', 'application/json');
+
+        } catch (Exception $e) {
+            echo $e;
+        }
+
 	}
 
-	public function hapus($id){
+	public function destroy($id){
 
-		$delete = \App\Tagihan::find($id);
-		$status = $delete->delete();
-
-		return redirect('/tagihan')->with('sukses', 'Data Berhasil Dihapus');
+		Http::delete('http://localhost:8000/tagihan/'.$id.'')->json();
 	}
 
 }
