@@ -65,6 +65,12 @@
 		.text-bold {
 			font-style:bold;
 		}
+		.text-green {
+			color: green;
+		}
+		.text-red {
+			color: red;
+		}
 		.underline {
 			text-decoration:underline;
 		}
@@ -103,15 +109,17 @@
 		.mb-1 {
 			margin-bottom:1rem;
 		}
+		li{
+			list-style: none;;
+			list-style-type: none;
+		}
 	</style>
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
 </head>
 <body>
-	
 	<div class="text-center">
 		<img src="{{ public_path('assets/img/brand/java.png') }}" class="img" alt="logo.png" width="90">
 		<div style="margin-left:6rem;">
-			<span class="text-header text-bold text-danger">
+			<span class="text-header text-bold">
 				PEMERINTAH DAERAH PROVINSI JAWA BARAT <br> DINAS PENDIDIKAN <br>
 				<span class="size2">SEKOLAH MENENGAH KEJURUAN NEGERI 4 BANDUNG</span> <br>
 			</span>
@@ -128,13 +136,23 @@
 
 			<!-- content -->
 			<h3 class="text-center mb-1">Tanda Terima Pembayaran Tagihan Sekolah</h3>
-
-			<div class="row">
-				<div class="col">
-					
-				</div>
-			</div>
+			<br><br>
 		</div>
-	</div>		
+	</div>	
+	<ul class="list-group list-group-flush">
+		<li class="text-desc mb-1">Tanggal Bayar : {{ $model['0']['created_at'] }}</li>
+		<li class="text-desc mb-1">Kode Bayar : {{ $model['0']['kd_bayar'] }}</li>
+		<li class="text-desc mb-1">Siswa : {{ $model['0']['nis'] }} / {{ $model['0']['nama'] }}</li>
+		<li class="text-desc mb-1">Jenis Pembayaran : 
+		{{ $model['0']['jenis_tagihan'] }} {{ $model['0']['bulan'] }} {{ $model['0']['tahun'] }} / Rp. {{ number_format($model['0']['nominal']) }}</li>
+		<li class="text-desc mb-1">Bayar : Rp. {{ number_format($model['0']['bayar']) }}</li>
+		<li class="text-desc mb-1">Status : 
+			@if ($model['0']['nominal']-$model['0']['bayar'] == 0)
+			<b class="text-green">Lunas</b>
+			@else
+			<b class="text-red">Belum Lunas</b>
+			@endif
+		</li>
+	</ul>	
 </body>
 </html>

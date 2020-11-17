@@ -4,12 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use App\User;
-use App\Siswa;
-use App\Kelas;
-use App\Angkatan;
-use App\Tagihan;
-use App\Pembayaran;
 use DataTables;
 
 class SiswaController extends Controller
@@ -17,14 +11,14 @@ class SiswaController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('CheckLogin');
     }
 
     public function index(){
 
         $data = Http::get('http://localhost:8000/siswa')->json();
 
-        return view('pages.data.siswa.datasiswa', $data);
+        return view('pages.data.siswa.datasiswa', compact('data'));
 
     }
 
@@ -53,16 +47,16 @@ class SiswaController extends Controller
                 'nama' => 'required|string|max:255',
                 'id_kelas' => 'required',
                 'id_angkatan' => 'required',
-                'nohp' => 'required|max:20',
+                'nohp' => 'required|max:15',
                 'alamat' => 'required'
             ]);
 
             $model = Http::post('http://localhost:8000/siswa', [
-                'avatar' => $request->file('avatar'),
+                'avatar' => $request->avatar,
                 'nis' => $request->nis,
                 'nama' => $request->nama,
-                'id_kelas' => $request->input('id_kelas'),
-                'id_angkatan' => $request->input('id_angkatan'),
+                'id_kelas' => $request->id_kelas,
+                'id_angkatan' => $request->id_angkatan,
                 'nohp' => $request->nohp,
                 'alamat' => $request->alamat,
             ]);
@@ -105,16 +99,16 @@ class SiswaController extends Controller
                 'nama' => 'required|string|max:255',
                 'id_kelas' => 'required',
                 'id_angkatan' => 'required',
-                'nohp' => 'required|max:20',
+                'nohp' => 'required|max:15',
                 'alamat' => 'required'
             ]);
 
             $model = Http::put('http://localhost:8000/siswa/'.$id.'', [
-                'avatar' => $request->file('avatar'),
+                'avatar' => $request->avatar,
                 'nis' => $request->nis,
                 'nama' => $request->nama,
-                'id_kelas' => $request->input('id_kelas'),
-                'id_angkatan' => $request->input('id_angkatan'),
+                'id_kelas' => $request->id_kelas,
+                'id_angkatan' => $request->id_angkatan,
                 'nohp' => $request->nohp,
                 'alamat' => $request->alamat,
             ]);
@@ -130,14 +124,14 @@ class SiswaController extends Controller
     }
 
     public function destroy($id){   
-        $model = Siswa::where('id',$id)->delete();
-        $model = Pembayaran::where('siswa_id',$id)->delete();
+
+        $model = Http::delete('http://localhost:8000/siswa/'.$id.'')->json();
+
     }
 
     public function dataTable(){
 
         $model = Http::get('http://localhost:8000/siswa')->json();
-
 
         return DataTables::of($model)
             ->addColumn('profile', function($model){

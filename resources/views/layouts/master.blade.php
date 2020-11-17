@@ -64,19 +64,11 @@
 		text: '{{ Session::get('sukses') }}'
 	});
 	@endif
-	@if(Session::has('error'))
+	@if(Session::has('errorr'))
 	swal({
 		type: 'error',
 		title: 'Oops...',
-		text: '{{ Session::get('error') }}'
-	});
-	@endif
-	@if(Session::has('errorBayar'))
-	swal({
-		type: 'error',
-		title: 'Oops...',
-		text: '{{ Session::get('error') }}',
-		footer: '<p>Silakan Isi Input NIS dengan Benar!</p>'
+		text: '{{ Session::get('errorr') }}'
 	});
 	@endif
 </script>

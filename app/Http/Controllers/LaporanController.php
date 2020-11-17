@@ -5,13 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Exports\SiswaExport;
 use Maatwebsite\Excel\Facades\Excel;
-
-use App\User;
-use App\Siswa;
-use App\Kelas;
-use App\Angkatan;
-use App\Tagihan;
-use App\Pembayaran;
+use Illuminate\Support\Facades\Http;
 use PDF;
 
 class LaporanController extends Controller
@@ -23,16 +17,11 @@ class LaporanController extends Controller
 	public function exportPdf(){
 
 		PDF::setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+		
+		$bayar = Http::get('http://localhost:8000/dashboard')->json();
+		$model = Http::get('http://localhost:8000/transaksi')->json();
 
-		$data = [
-			'pembayaran' => Pembayaran::all(),
-			'siswa' => Siswa::all(),
-			'tagihan' => Tagihan::all(),
-			'user' => User::find(auth()->user()->id),
-			'bayar' => Pembayaran::all()->sum('bayar'),
-		];
-
-		$pdf = PDF::loadView('pages.pembayaran.transaksi.pdf', $data);
+		$pdf = PDF::loadView('pages.pembayaran.transaksi.pdf', compact('bayar', 'model'));
 		return $pdf->download('DataTransaksi_SMKN4BDG.pdf');
 
 	}
@@ -41,11 +30,11 @@ class LaporanController extends Controller
 
 		PDF::setPaper('A6', 'landskape');
 
-		$model = Pembayaran::find($id);
+		$model = Http::get('http://localhost:8000/transaksi/'.$id.'')->json();
       
 
 		$pdf = PDF::loadView('pages.pembayaran.transaksi.pdfSiswa', compact('model'));
 		return $pdf->download('StrukPembayaran.pdf');
-		// return view('pages.pembayaran.transaksi.pdfSiswa', compact('model'));
+		//return view('pages.pembayaran.transaksi.pdfSiswa', compact('model'));
 	}
 }

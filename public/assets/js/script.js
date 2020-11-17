@@ -43,7 +43,7 @@ $('#modal-btn-save').click(function (event) {
                 swal({
                     type: 'error',
                     title: 'Oops...',
-                    text: 'Something went wrong!'
+                    text: 'NIS tidak Ada di Data!'
                 });
             } else {
                 swal({

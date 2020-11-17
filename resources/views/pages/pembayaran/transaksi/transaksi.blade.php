@@ -80,7 +80,7 @@
 			{data:'kd_bayar', name:'kd_bayar'},
 			{data:'nis', name:'nis'},
 			{data:'jenis_tagihan', name:'jenis_tagihan'},
-			{data:'tgl_bayar', name:'tgl_bayar'},
+			{data:'tgl', name:'tgl'},
 			{data:'aksi', name:'aksi'},
 			{data:'cetak', name:'cetak'},
 			],

@@ -49,7 +49,7 @@ Route::get('tabletagihan', 'TagihanController@dataTable')->name('tagihan.table')
 Route::resource('transaksi', 'TransaksiController');
 Route::get('histori', 'TransaksiController@histori');
 Route::get('siswa/{id}/transaksi', 'TransaksiController@transaksi')->name('transaksi.siswa');
-Route::post('siswa/{id}/transaksi/create', 'TransaksiController@createTransaksi')->name('createTransaksi.siswa');
+Route::put('siswa/{id}/transaksi', 'TransaksiController@createTransaksi')->name('createTransaksi.siswa');
 Route::get('tabletransaksi', 'TransaksiController@dataTable')->name('transaksi.table');
 
 //ROUTE EXPORT
@@ -60,5 +60,3 @@ Route::get('export/pdf/siswa/{id}', 'LaporanController@exportSiswaPdf')->name('c
 //ROUTE API PUBLIC
 Route::get('corona', 'ApiController@index');	
 Route::get('berita', 'ApiController@berita');
-
-Route::get('lumenapi', 'SiswaController@lumenapi');

@@ -41,6 +41,7 @@
 								<th>No</th>
 								<th>Kelas</th>
 								<th>Kompetensi Keahlian</th>
+								<th>Dibuat</th>
 								<th></th>
 							</thead>
 						</table>
@@ -67,6 +68,7 @@
 			{data:'DT_RowIndex', name:'id'},
 			{data:'nama_kelas', name:'nama_kelas'},
 			{data:'kompetensi_keahlian', name:'kompetensi_keahlian'},
+			{data:'tgl', name:'tgl'},
 			{data:'aksi', name:'aksi'}
 			],
 			order: [

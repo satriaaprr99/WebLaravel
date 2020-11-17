@@ -87,16 +87,22 @@
 										<div class="input-group-prepend">
 											<span class="input-group-text"><i class="ni ni-circle-08"></i></span>
 										</div>
-										<input name="username" class="form-control" placeholder="Username" type="text">
+										<input name="username" class="form-control @error('username') is-invalid @enderror" placeholder="Username" type="text">
 									</div>
+									@error('username')
+									<span class="help-error text-danger text-sm"><strong>{{ $message }}</strong></span>
+									@enderror
 								</div>
 								<div class="form-group">
 									<div class="input-group input-group-merge input-group-alternative">
 										<div class="input-group-prepend">
 											<span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
 										</div>
-										<input name="password" class="form-control" placeholder="Password" type="password">
+										<input name="password" class="form-control @error('password') is-invalid @enderror" placeholder="Password" type="password">
 									</div>
+									@error('password')
+									<span class="help-error text-danger text-sm"><strong>{{ $message }}</strong></span>
+									@enderror
 								</div>
 								<div class="text-center">
 									<button type="submit" class="btn btn-primary btn-block my-4">Login</button>
@@ -110,13 +116,30 @@
 	</div>
 	<!-- Argon Scripts -->
 	<!-- Core -->
-	<script src="../assets/vendor/jquery/dist/jquery.min.js"></script>
-	<script src="../assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-	<script src="../assets/vendor/js-cookie/js.cookie.js"></script>
-	<script src="../assets/vendor/jquery.scrollbar/jquery.scrollbar.min.js"></script>
-	<script src="../assets/vendor/jquery-scroll-lock/dist/jquery-scrollLock.min.js"></script>
+	<script src="assets/vendor/jquery/dist/jquery.min.js"></script>
+	<script src="assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="assets/vendor/sweetalert2/dist/sweetalert2.all.min.js"></script>
+	<script src="assets/vendor/js-cookie/js.cookie.js"></script>
+	<script src="assets/vendor/jquery.scrollbar/jquery.scrollbar.min.js"></script>
+	<script src="assets/vendor/jquery-scroll-lock/dist/jquery-scrollLock.min.js"></script>
 	<!-- Argon JS -->
-	<script src="../assets/js/argon.js?v=1.2.0"></script>
+	<script src="assets/js/argon.js?v=1.2.0"></script>
+	<script>
+		@if(Session::has('sukses'))
+		swal({
+			type: 'success',
+			title: 'Success!',
+			text: '{{ Session::get('sukses') }}'
+		});
+		@endif
+		@if(Session::has('errorr'))
+		swal({
+			type: 'error',
+			title: 'Oops...',
+			text: '{{ Session::get('errorr') }}'
+		});
+		@endif
+	</script>
 </body>
 
 </html>

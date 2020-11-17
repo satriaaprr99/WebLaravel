@@ -23,6 +23,8 @@
 						<option value="Seragam_Sekolah">Seragam_Sekolah</option>
 						<option value="PKL">PKL</option>
 						<option value="Bangunan">Bangunan</option>
+						<option value="Iuran Bulanan">Iuran Bulanan</option>
+						<option value="Ujian Tengah Semester">Ujian Tengah Semester</option>
 						<option value="Ujian Akhir Semester">Ujian Akhir Semester</option>
 					</select>
 				</div>

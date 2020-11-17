@@ -25,7 +25,7 @@
 							<div class="row">
 								<div class="col">
 									<h5 class="card-title text-uppercase text-muted mb-0">Total Siswa</h5>
-									<span class="h2 font-weight-bold mb-0">{{ $siswa->count() }}</span>
+									<span class="h2 font-weight-bold mb-0">{{ $model['siswa'] }}</span>
 								</div>
 								<div class="col-auto">
 									<div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
@@ -46,7 +46,7 @@
 							<div class="row">
 								<div class="col">
 									<h5 class="card-title text-uppercase text-muted mb-0">Total Kelas</h5>
-									<span class="h2 font-weight-bold mb-0">{{ $kelas->count() }}</span>
+									<span class="h2 font-weight-bold mb-0">{{ $model['kelas'] }}</span>
 								</div>
 								<div class="col-auto">
 									<div class="icon icon-shape bg-gradient-blue text-white rounded-circle shadow">
@@ -67,7 +67,7 @@
 							<div class="row">
 								<div class="col">
 									<h5 class="card-title text-uppercase text-muted mb-0">Total Data SPP</h5>
-									<span class="h2 font-weight-bold mb-0">{{ $ctagihan->count() }}</span>
+									<span class="h2 font-weight-bold mb-0">{{ $model['ctagihan'] }}</span>
 								</div>
 								<div class="col-auto">
 									<div class="icon icon-shape bg-gradient-purple text-white rounded-circle shadow">
@@ -88,7 +88,7 @@
 							<div class="row">
 								<div class="col">
 									<h5 class="card-title text-uppercase text-muted mb-0">Total Uang Tagihan</h5>
-									<span class="h2 font-weight-bold mb-0">Rp. {{ number_format($tagihan*count($siswa)) }}</span>
+									<span class="h2 font-weight-bold mb-0">Rp. {{ number_format($model['tagihan']*$model['siswa']) }}</span>
 								</div>
 								<div class="col-auto">
 									<div class="icon icon-shape bg-gradient-orange text-white rounded-circle shadow">
@@ -109,7 +109,7 @@
 							<div class="row">
 								<div class="col">
 									<h5 class="card-title text-uppercase text-muted mb-0">Pemasukan</h5>
-									<span class="h2 font-weight-bold mb-0">Rp. {{ number_format($bayar) }}</span>
+									<span class="h2 font-weight-bold mb-0">Rp. {{ number_format($model['bayar']) }}</span>
 								</div>
 								<div class="col-auto">
 									<div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
@@ -118,7 +118,7 @@
 								</div>
 							</div>
 							<p class="mt-3 mb-0 text-sm">
-								<span class="text-success mr-2"><i class="fa fa-arrow-up"></i> {{ $cbayar->count() }} Pembayaran</span>
+								<span class="text-success mr-2"><i class="fa fa-arrow-up"></i> {{ $model['cbayar'] }} Pembayaran</span>
 								<span class="text-nowrap">Since last Year</span>
 							</p>
 						</div>
@@ -177,7 +177,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							@foreach($model as $value)
+							@foreach($model2['data'] as $value)
 							<tr>
 								<th scope="row">
 									<a href="#">

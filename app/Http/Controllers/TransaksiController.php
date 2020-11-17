@@ -16,13 +16,12 @@ use PDF;
 class TransaksiController extends Controller
 {
 	public function __construct(){
-		$this->middleware('auth');
+		$this->middleware('CheckLogin');
 	}
 
 	public function index(Request $request){
 
 		$data = Http::get('http://localhost:8000/transaksi')->json();
-
 		return view('pages.pembayaran.transaksi.transaksi', $data);
 
 	}
@@ -30,14 +29,12 @@ class TransaksiController extends Controller
 	public function histori(){
 
 		$model = Http::get('http://localhost:8000/histori')->json();
-
 		return view('pages.pembayaran.transaksi.histori', compact('model'));
 	}
 
 	public function show($id){
 
 		$model = Http::get('http://localhost:8000/transaksi/'.$id.'')->json();
-		
         return view('pages.pembayaran.transaksi.show', compact('model'));
 	}
 
@@ -52,6 +49,9 @@ class TransaksiController extends Controller
 	            return '<b class="text-red">Belum Lunas</b>';
 	        };
 		})
+		->addColumn('tgl', function($data){
+            return \Carbon\Carbon::parse($data['tgl_bayar'])->format('d/m/Y');
+        })
 		->addColumn('nominalFormat', function($data){
 			return 'Rp. '.number_format($data['nominal']).'';
 		})
@@ -126,6 +126,7 @@ class TransaksiController extends Controller
 			$this->validate($request, [
 	            'siswa_id' => 'required',
 	            'tagihan_id' => 'required',
+	            'tgl_bayar' => 'required',
 	            'bayar' => 'required|integer'
 	        ]);
 
@@ -151,29 +152,30 @@ class TransaksiController extends Controller
 
 	public function transaksi($id){
 
-        $model = Siswa::findOrFail($id);
-        $data = [
-            'user' => User::find(auth()->user()->id),
-            'siswa' => Siswa::find($id),
-            'kelas' => Kelas::all(),
-            'angkatan' => Angkatan::all(),
-            'tagihan' => Tagihan::all(),
-            'bayar' => Pembayaran::find($id)
-        ];
-        
-        return view('pages.data.siswa.formTransaksi', $data, compact('model'));
+		$model = Http::get('http://localhost:8000/siswa/'.$id.'')->json();
+		$model2 = Http::get('http://localhost:8000/tagihan')->json();
+
+        return view('pages.data.siswa.formTransaksi', compact('model', 'model2'));
     }
 
     public function createTransaksi(Request $request, $id){
-        $data = Siswa::find($id);
-        if($data->tagihan()->where('tagihan_id', $request->tagihan)->exists()){
-            return back()->with('error', 'Data Tagihan sudah ada di tabel siswa');
-        }else{
-        	$data->tagihan()->attach($request->tagihan, [
-	            'kd_bayar' => mt_rand(00000000, 99999999), 
-	            'bayar' => $request->bayar
-       		]);
-        }
+
+    	$this->validate($request, [
+	            'siswa_id' => 'required',
+	            'tagihan_id' => 'required',
+	            'tgl_bayar' => 'required',
+	            'bayar' => 'required|integer'
+	        ]);
+
+		$model = Http::post('http://localhost:8000/siswabayar/'.$id.'', [
+				'kd_bayar' => mt_rand(00000000, 99999999),
+				'siswa_id' => $request->siswa_id,
+				'tagihan_id' => $request->tagihan_id,
+				'tgl_bayar' => $request->tgl_bayar,
+				'bayar' => $request->bayar,
+	   	]);
+
+	    return response($model)->header('Content-Type', 'application/json');
     } 
 }
 

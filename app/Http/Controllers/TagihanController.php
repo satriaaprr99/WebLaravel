@@ -2,21 +2,15 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Http;
-use App\User;
-use App\Siswa;
-use App\Kelas;
-use App\Tagihan;
-use App\Pembayaran;
-use DataTables;
-
 use Illuminate\Http\Request;
+use DataTables;
 
 class TagihanController extends Controller
 {
 
 	public function __construct()
 	{
-		$this->middleware('auth');
+		$this->middleware('CheckLogin');
 	}
 
 	public function index(){
@@ -56,7 +50,6 @@ class TagihanController extends Controller
 	public function create(){
 
 		$model = Http::get('http://localhost:8000/tagihan')->json();
-
 		return view('pages.pembayaran.tagihan.form', compact('model'));
 	}
 

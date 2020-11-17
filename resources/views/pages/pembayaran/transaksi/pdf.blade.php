@@ -155,23 +155,23 @@
 				</thead>
 				<tbody>
 					<?php $no = 1; ?>
-					@foreach($pembayaran as $value)
+					@foreach($model as $value)
 					<tr>
 						<td>{{ $no++ }}</td>
-						<td>{{ $value->kd_bayar }}</td>
-						<td>{{ $value->siswa->nama }}</td>
-						<td>{{ $value->siswa->kelas->nama_kelas }}</td>
-						<td>{{ $value->tagihan->jenis_tagihan }} {{$value->tagihan->bulan}}</td>
-						<td>Rp. {{ number_format($value->tagihan->nominal) }}</td>
-						<td>Rp. {{ number_format($value->bayar) }}</td>
+						<td>{{ $value['kd_bayar'] }}</td>
+						<td>{{ $value['nama'] }}</td>
+						<td>{{ $value['nama_kelas'] }}</td>
+						<td>{{ $value['jenis_tagihan'] }} {{$value['bulan']}}</td>
+						<td>Rp. {{ number_format($value['nominal']) }}</td>
+						<td>Rp. {{ number_format($value['bayar']) }}</td>
 						<td>
-							@if($value->tagihan->nominal-$value->bayar == 0)
+							@if($value['nominal']-$value['bayar'] == 0)
 							<b class="text-green">Lunas</b>
 							@else
 							<b class="text-red">Belum Lunas</b>
 							@endif
 						</td>
-						<td>{{ $value->created_at->format('d M, Y') }}</td>
+						<td>{{ \Carbon\Carbon::parse($value['updated_at'])->format('d/m/Y') }}</td>
 
 					</tr>
 					@endforeach
@@ -179,15 +179,10 @@
 				<tfoot>
 					<tr>
 						<th colspan="6">Jumlah : </th>
-						<th>Rp. {{ number_format($bayar) }}</th>
+						<th>Rp. {{ number_format($bayar['bayar']) }}</th>
 					</tr>
 				</tfoot>
 			</table>
-			<!-- /content -->
-
-			<!-- footer -->
-			<!-- <div>Pembuat : {{ auth()->user()->name }}</div> -->
-			<!-- /footer -->
 		</div>
 	</div>		
 </body>

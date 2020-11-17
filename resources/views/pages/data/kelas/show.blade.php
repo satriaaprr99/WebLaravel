@@ -9,9 +9,9 @@
 	</div>
 	<div class="col-md-8">
 		<ul class="list-group list-group-flush">
-			<li class="list-group-item">: {{$model['nama_kelas']}}</li>
-			<li class="list-group-item">: {{$model['kompetensi_keahlian']}}</li>
-			<li class="list-group-item">: {{$jml}} Siswa</li>
+			<li class="list-group-item">: {{$model['data']['nama_kelas']}}</li>
+			<li class="list-group-item">: {{$model['data']['kompetensi_keahlian']}}</li>
+			<li class="list-group-item">: {{$model['jml']}} Siswa</li>
 			<li class="list-group-item">: 2020/2021</li>
 		</ul>
 	</div>

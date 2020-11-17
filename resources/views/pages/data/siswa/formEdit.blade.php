@@ -5,6 +5,15 @@
 
 	<div class="row">
 
+		<div hidden="" class="col-md-12">
+			<div class="form-group">
+				<label for="avatar" class="col-md-12 form-control-label pt-0">Avatar</label>
+				<div class="col-md-12 spanerror">
+					<input name="avatar" type="file" class="form-control form-control-sm" id="avatar" value="{{ $model['0']['avatar'] }}">
+				</div>
+			</div>
+		</div>
+
 		<div class="col-md-6">
 			<div class="form-group">
 				<label for="nis" class="col-md-12 form-control-label pt-0">NIS</label>

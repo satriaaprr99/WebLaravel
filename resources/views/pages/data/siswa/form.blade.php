@@ -1,10 +1,10 @@
-<form action="{{ route('siswa.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+<form action="{{ route('siswa.store') }}" method="POST" autocomplete="off" enctype="multipart/form-data">
 
 	@csrf
 
 	<div class="row">
 
-		<div hidden class="col-md-12">
+		<div hidden="" class="col-md-12">
 			<div class="form-group">
 				<label for="avatar" class="col-md-12 form-control-label pt-0">Avatar</label>
 				<div class="col-md-12 spanerror">
@@ -73,6 +73,6 @@
 			<textarea name="alamat" class="form-control form-control-sm" id="alamat"></textarea>
 		</div>
 	</div>
-
+	
 </form>
 	

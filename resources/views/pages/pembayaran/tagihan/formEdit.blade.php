@@ -23,6 +23,8 @@
 						<option value="Seragam_Sekolah" {{ $model['jenis_tagihan'] == 'Seragam_Sekolah' ? 'selected' : '' }}>Seragam_Sekolah</option>
 						<option value="PKL" {{ $model['jenis_tagihan'] == 'PKL' ? 'selected' : '' }}>PKL</option>
 						<option value="Bangunan" {{ $model['jenis_tagihan'] == 'Bangunan' ? 'selected' : '' }}>Bangunan</option>
+						<option value="Iuran Bulanan" {{ $model['jenis_tagihan'] == 'Iuran Bulanan' ? 'selected' : '' }}>Iuran Bulanan</option>
+						<option value="Ujian Tengah Semester" {{ $model['jenis_tagihan'] == 'Ujian Tengah Semester' ? 'selected' : '' }}>Ujian Tengah Semester</option>
 						<option value="Ujian Akhir Semester" {{ $model['jenis_tagihan'] == 'Ujian Akhir Semester' ? 'selected' : '' }}>Ujian Akhir Semester</option>
 					</select>
 				</div>

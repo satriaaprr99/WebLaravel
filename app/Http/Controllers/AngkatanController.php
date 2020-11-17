@@ -5,12 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\Response;
-use App\User;
-use App\Siswa;
-use App\Kelas;
-use App\Angkatan;
-use App\Tagihan;
-use App\Pembayaran;
 use DataTables;
 
 class AngkatanController extends Controller
@@ -18,7 +12,7 @@ class AngkatanController extends Controller
 
 	public function __construct()
 	{
-		$this->middleware('auth');
+		$this->middleware('CheckLogin');
 	}
 
 	public function index(){
@@ -31,8 +25,7 @@ class AngkatanController extends Controller
 	public function show($id){
 
 		$model = Http::get('http://localhost:8000/angkatan/'.$id.'')->json();
-		$jml = Siswa::where('id_angkatan', $id)->count();
-        return view('pages.data.angkatan.show', compact('model', 'jml')); 
+        return view('pages.data.angkatan.show', compact('model')); 
 
 	}
 
@@ -103,7 +96,7 @@ class AngkatanController extends Controller
         $model =  Http::get('http://localhost:8000/angkatan')->json();
         return DataTables::of($model)
         ->addColumn('tgl', function($data){
-            return $data['created_at'];
+            return \Carbon\Carbon::parse($data['created_at'])->format('d/m/Y');
         })
         ->addColumn('aksi', function($model){
             return view('layouts._aksi', [

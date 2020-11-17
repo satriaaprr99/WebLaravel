@@ -156,7 +156,7 @@
 						<h3 class="mb-0">Pembayaran Tagihan</h3>
 					</div>
 					<div class="col-4 text-right">
-						<a href="{{ route('transaksi.create') }}" class="btn btn-sm btn-default modal-show" title="Create Data Transaksi">Tambah Data Transaksi</a>
+						<a href="{{ route('transaksi.siswa', $model['0']['id']) }}" class="btn btn-sm btn-default modal-show" title="Create Data Transaksi">Tambah Data Transaksi</a>
 						<a href="/transaksi" class="btn btn-sm btn-default">See All</a>
 					</div>
 				</div>
