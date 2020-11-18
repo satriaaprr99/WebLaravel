@@ -18,7 +18,14 @@
 					</nav>
 				</div>
 				<div class="col-sm-4 col-5 text-right">
-					<a href="{{ route('tagihan.create') }}" class="btn btn-white modal-show" title="Create Data Tagihan">Tambah Data Tagihan</a>
+					<ul class="nav nav-pills mb-3 float-right" id="pills-tab" role="tablist">
+						<li class="nav-item">
+							<a href="#" class="btn btn-sm btn-white btn-table-show" title="Table Data Tagihan">Table Tagihan</a>
+						</li>
+						<li class="nav-item">
+							<a href="{{ route('tagihan.create') }}" class="btn btn-sm btn-white btn-form-show" title="Create Data Tagihan">Tambah Data</a>
+						</li>
+					</ul>
 				</div>
 			</div>
 		</div>
@@ -31,7 +38,29 @@
 			<div class="card">
 				<!-- Card header -->
 				<div class="card-header border-0">
-					<div class="table-responsive">
+					<div class="row">
+						<div class="col-sm-6 text-left">
+							<h2 class="mb-0 form-title">Table Data Tagihan</h2>
+						</div>
+						<div class="col-sm-6 text-right">
+							<a href="#" class="btn btn-sm btn-default btn-export">
+								<i class="ni ni-single-copy-04"></i> Export
+							</a>
+						</div>
+					</div>
+					<hr>
+					<div class="form-data-show" id="form-data-show">
+						<div class="form-show" id="form-show">
+							
+						</div>
+
+						<div class="form-group float-right" id="form-footer">
+							<button type="button" class="btn btn-sm btn-warning btn-table-show" title="Table Data Tagihan" id="btn-kembali">Kembali</button>
+							<button type="button" class="btn btn-sm btn-primary mr-3" id="form-btn-save"></button>
+						</div>
+						
+					</div>
+					<div class="table-responsive table-data">
 						<table class="table align-items-center table-flush" id="datatable">
 							<thead class="thead-light">
 								<th>No</th>

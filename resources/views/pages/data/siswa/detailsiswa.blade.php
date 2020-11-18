@@ -152,17 +152,37 @@
 		<div class="card">
 			<div class="card-header">
 				<div class="row align-items-center">
-					<div class="col-8">
-						<h3 class="mb-0">Pembayaran Tagihan</h3>
+					<div class="col-6">
+						<h3 class="mb-0 form-title">Pembayaran Tagihan</h3>
 					</div>
-					<div class="col-4 text-right">
-						<a href="{{ route('transaksi.siswa', $model['0']['id']) }}" class="btn btn-sm btn-default modal-show" title="Create Data Transaksi">Tambah Data Transaksi</a>
-						<a href="/transaksi" class="btn btn-sm btn-default">See All</a>
+					<div class="col-6 text-right">
+						<ul class="nav nav-pills mb-3 float-right" id="pills-tab" role="tablist">
+							<li class="nav-item">
+								<a href="#" class="btn btn-sm btn-default btn-table-show" title="Table Data Transaksi">Table Transaksi</a>
+							</li>
+							<li class="nav-item">
+								<a href="{{ route('transaksi.siswa', $model['0']['id']) }}" class="btn btn-sm btn-default btn-form-show" title="Create Data Transaksi">Tambah Data Transaksi</a>
+							</li>
+							<li class="nav-item">
+								<a href="/transaksi" class="btn btn-sm btn-default">See All</a>
+							</li>
+						</ul>
 					</div>
 				</div>
 			</div>
 			<div class="card-body">
-				<div class="table-responsive">
+				<div class="form-data-show" id="form-data-show">
+					<div class="form-show" id="form-show">
+
+					</div>
+
+					<div class="form-group float-right" id="form-footer">
+						<button type="button" class="btn btn-sm btn-warning btn-table-show" title="Table Data Tagihan" id="btn-kembali">Kembali</button>
+						<button type="button" class="btn btn-sm btn-primary mr-3" id="form-btn-save"></button>
+					</div>
+
+				</div>
+				<div class="table-responsive table-data">
 					<table class="table align-items-center table-flush" id="datatable">
 						<thead class="thead-light">
 							<th>No</th>

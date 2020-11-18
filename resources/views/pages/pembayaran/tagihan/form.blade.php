@@ -1,7 +1,6 @@
-{!! Form::model($model, [
-	'route' => 'tagihan.store',
-	'method' => 'POST'
-	]) !!}
+<form action="{{ route('tagihan.store') }}" method="POST" autocomplete="off">
+
+	@csrf
 
 	<div class="row">
 		<div class="col-md-6">
@@ -70,5 +69,4 @@
 		</div>
 	</div>
 
-	{!! Form::close() !!}
-
+</form>

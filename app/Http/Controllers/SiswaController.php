@@ -16,9 +16,11 @@ class SiswaController extends Controller
 
     public function index(){
 
-        $data = Http::get('http://localhost:8000/siswa')->json();
+        $model = Http::get('http://localhost:8000/siswa')->json();
+        $model2 = Http::get('http://localhost:8000/kelas')->json();
+        $model3 = Http::get('http://localhost:8000/angkatan')->json();
 
-        return view('pages.data.siswa.datasiswa', compact('data'));
+        return view('pages.data.siswa.datasiswa', compact('model', 'model2', 'model3'));
 
     }
 

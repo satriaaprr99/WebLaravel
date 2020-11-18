@@ -1,29 +1,105 @@
-$('body').on('click', '.modal-show', function(event){
-	event.preventDefault();
+$(document).ready(function(){
+    $('#btn-kembali').prop('hidden', true);
+    $('#form-btn-save').prop('hidden', true);
 
-	var me = $(this),
-      url = me.attr('href'),
-      title = me.attr('title');
+    //SHOW TABLE
+    $('.btn-table-show').click(function() {
 
-        $('#modal-title').text(title);
-        $('#modal-btn-save').prop('hidden', false);
-        $('#modal-btn-save').removeClass('hide')
+        var me = $(this),
+        title = me.attr('title');
+
+        $('.form-title').text(title);
+        $('.table-data').prop('hidden', false);
+        $('.btn-export').prop('hidden', false);
+        $('.form-data-show').prop('hidden', true);
+
+    })
+
+    //SHOW FORM CREATE
+    $('.btn-form-show').click(function(){
+        event.preventDefault();
+
+        var me = $(this),
+        url = me.attr('href'),
+        title = me.attr('title');
+
+        $('.form-title').text(title);
+        $('.btn-export').prop('hidden', true);
+        $('.table-data').prop('hidden', true);
+        $('.form-data-show').prop('hidden', false);
+        $('#btn-kembali').prop('hidden', false);
+        $('#form-btn-save').prop('hidden', false);
+        $('#form-btn-save').removeClass('hide')
         .text(me.hasClass('edit') ? 'Update' : 'Create');
 
         $.ajax({
             url: url,
             dataType: 'html',
             success: function(response){
-                $('#modal-body').html(response);
+                $('#form-show').html(response);
             }
-        })	
-    $('#modal').modal('show');
+        })   
+
+    })
+
 })
 
-$('#modal-btn-save').click(function (event) {
+//SHOW FORM EDIT
+$('body').on('click', '.btn-form-edit', function(event){
     event.preventDefault();
 
-    var form = $('#modal-body form'),
+    var me = $(this),
+    url = me.attr('href'),
+    title = me.attr('title');
+
+    $('.form-title').text(title);
+    $('.btn-export').prop('hidden', true);
+    $('.table-data').prop('hidden', true);
+    $('.form-data-show').prop('hidden', false);
+
+    $('#btn-kembali').prop('hidden', false);
+    $('#form-btn-save').prop('hidden', false);
+    $('#form-btn-save').removeClass('hide')
+    .text(me.hasClass('edit') ? 'Update' : 'Create');
+
+    $.ajax({
+        url: url,
+        dataType: 'html',
+        success: function(response){
+            $('#form-show').html(response);
+        }
+    })   
+})
+
+//SHOW DETAIL
+$('body').on('click', '.btn-show', function (event) {
+    event.preventDefault();
+
+    var me = $(this),
+    url = me.attr('href'),
+    title = me.attr('title');
+
+    $('.form-title').text(title);
+    $('.btn-export').prop('hidden', true);
+    $('.table-data').prop('hidden', true);
+    $('.form-data-show').prop('hidden', false);
+    $('#btn-kembali').prop('hidden', false);
+    $('#form-btn-save').prop('hidden', true);
+
+    $.ajax({
+        url: url,
+        dataType: 'html',
+        success: function(response){
+            $('#form-show').html(response);
+        }
+    })   
+});
+
+//ACTION CREATE-EDIT
+$('#form-btn-save').click(function (event) {
+    event.preventDefault();
+
+    var form = $('.form-show form'),
     url = form.attr('action'),
     method = $('input[name=_method]').val() == undefined ? 'POST' : 'PUT';
 
@@ -35,10 +111,6 @@ $('#modal-btn-save').click(function (event) {
         method: method,
         data : form.serialize(),
         success: function (response) {
-            form.trigger('reset');
-            $('#modal').modal('hide');
-            $('#datatable').DataTable().ajax.reload();
-
             if(response.status == 'ERROR'){
                 swal({
                     type: 'error',
@@ -46,6 +118,14 @@ $('#modal-btn-save').click(function (event) {
                     text: 'NIS tidak Ada di Data!'
                 });
             } else {
+                form.trigger('reset');
+                $('#datatable').DataTable().ajax.reload();
+
+                $('.form-title').text('Table Data');
+                $('.table-data').prop('hidden', false);
+                $('.btn-export').prop('hidden', false);
+                $('.form-data-show').prop('hidden', true);
+
                 swal({
                     type : 'success',
                     title : 'Success!',
@@ -67,6 +147,7 @@ $('#modal-btn-save').click(function (event) {
     })
 });
 
+//DELETE DATA
 $('body').on('click', '.btn-delete', function (event) {
     event.preventDefault();
 
@@ -110,26 +191,4 @@ $('body').on('click', '.btn-delete', function (event) {
             });
         }
     });
-});
-
-$('body').on('click', '.btn-show', function (event) {
-    event.preventDefault();
-
-    var me = $(this),
-    url = me.attr('href'),
-    title = me.attr('title');
-
-    $('#modal-title').text(title);
-    $('#modal-btn-save').addClass('hide');
-    $('#modal-btn-save').prop('hidden', true);
-
-    $.ajax({
-        url: url,
-        dataType: 'html',
-        success: function (response) {
-            $('#modal-body').html(response);
-        }
-    });
-
-    $('#modal').modal('show');
 });

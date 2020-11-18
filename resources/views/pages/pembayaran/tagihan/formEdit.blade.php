@@ -1,7 +1,7 @@
-{!! Form::model($model, [
-	'route' => ['tagihan.update', $model['id']],
-	'method' => 'PUT'
-	]) !!}
+<form action="{{ route('tagihan.update', $model['id']) }}" method="PUT">
+
+	@csrf
+	{{ method_field('PUT') }}
 
 	<div class="row">
 		<div class="col-md-6">
@@ -70,5 +70,4 @@
 		</div>
 	</div>
 
-	{!! Form::close() !!}
-
+</form>

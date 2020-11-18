@@ -2,7 +2,7 @@
 	<i class="far fa-eye"></i>
 </a>
 
-<a href="{{ $url_edit }}" class="modal-show btn btn-blue btn-sm edit" title="Edit">
+<a href="{{ $url_edit }}" class="btn-form-edit btn btn-blue btn-sm edit" title="Edit Data">
 	<i class="far fa-edit"></i>
 </a>
 
